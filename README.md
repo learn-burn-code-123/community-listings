@@ -1,36 +1,116 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Network School Community Listings
+
+A modern marketplace application for the Network School community, built with Next.js, TypeScript, and Tailwind CSS.
+
+## Features
+
+- User Authentication with Google Sign-in
+- Create, edit, and delete listings
+- Multiple categories (Gigs, Gadgets, Clothing, Food & Drink, Books, Sports, and Community)
+- Rich text editor for descriptions
+- Multiple image upload
+- Real-time messaging system
+- Advanced search and filtering
+- User profiles and ratings
+- Safety and moderation features
+
+## Tech Stack
+
+- **Framework**: Next.js 14 with App Router
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **Database**: PostgreSQL with Prisma ORM
+- **Authentication**: NextAuth.js
+- **File Upload**: UploadThing
+- **Maps**: Mapbox
+- **UI Components**: Headless UI
+- **Icons**: Heroicons
+- **Forms**: React Hook Form with Zod validation
+- **Notifications**: React Hot Toast
+
+## Prerequisites
+
+- Node.js 18+ and npm
+- PostgreSQL database
+- Google OAuth credentials
+- Mapbox API key
+- UploadThing account
+
+## Environment Variables
+
+Create a `.env` file in the root directory with the following variables:
+
+```env
+# Database
+DATABASE_URL="postgresql://postgres:postgres@localhost:5432/community_listings"
+
+# NextAuth
+NEXTAUTH_URL="http://localhost:3000"
+NEXTAUTH_SECRET="your-secret-key-here"
+
+# Google OAuth
+GOOGLE_CLIENT_ID=""
+GOOGLE_CLIENT_SECRET=""
+
+# UploadThing
+UPLOADTHING_SECRET=""
+UPLOADTHING_APP_ID=""
+
+# Mapbox
+NEXT_PUBLIC_MAPBOX_TOKEN=""
+```
 
 ## Getting Started
 
-First, run the development server:
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/community-listings.git
+   cd community-listings
+   ```
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+3. Set up the database:
+   ```bash
+   npx prisma migrate dev
+   ```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+4. Start the development server:
+   ```bash
+   npm run dev
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+5. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-## Learn More
+## Development
 
-To learn more about Next.js, take a look at the following resources:
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run lint` - Run ESLint
+- `npm run type-check` - Run TypeScript compiler
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Deployment
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The application can be deployed to platforms like Vercel, Netlify, or Render. Make sure to:
 
-## Deploy on Vercel
+1. Set up all required environment variables
+2. Configure the database connection
+3. Set up OAuth credentials
+4. Configure file upload service
+5. Set up Mapbox integration
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Contributing
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

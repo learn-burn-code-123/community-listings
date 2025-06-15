@@ -1,0 +1,144 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  listings      Listing[]
+  messages      Message[]
+  ratings       Rating[]
+  notifications Notification[]
+  reviewsGiven  Review[]       @relation("Reviewer")
+  reviewsReceived Review[]     @relation("Reviewed")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Listing {
+  id          String    @id @default(cuid())
+  title       String
+  description String
+  price       Float
+  condition   String
+  images      String[]
+  status      String    @default("available") // "available", "sold", "pending"
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  userId      String
+  categoryId  String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category    Category  @relation(fields: [categoryId], references: [id])
+  messages    Message[]
+  reviews     Review[]
+
+  @@index([userId])
+  @@index([categoryId])
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  description String?
+  listings    Listing[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  content   String   @db.Text
+  images    String[]
+  listingId String
+  listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  senderId  String
+  sender    User     @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Rating {
+  id        String   @id @default(cuid())
+  score     Int
+  comment   String?  @db.Text
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  type      String   // "message", "listing_sold", "review"
+  title     String
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Review {
+  id          String   @id @default(cuid())
+  rating      Int      @default(0)
+  comment     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  reviewerId  String
+  reviewedId  String
+  listingId   String
+  reviewer    User     @relation("Reviewer", fields: [reviewerId], references: [id], onDelete: Cascade)
+  reviewed    User     @relation("Reviewed", fields: [reviewedId], references: [id], onDelete: Cascade)
+  listing     Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  @@index([reviewerId])
+  @@index([reviewedId])
+  @@index([listingId])
+}
